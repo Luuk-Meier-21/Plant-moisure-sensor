@@ -5,3 +5,10 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: unit-test
+        name: unit-test
+        entry: bash ./scripts/unit-test.sh
+        language: system
+        pass_filenames: false
