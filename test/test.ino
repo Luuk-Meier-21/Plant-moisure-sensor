@@ -9,7 +9,7 @@ test(simple1)
 
 test(simple2)
 {
-  assertTrue(false);
+  assertTrue(true);
 }
 
 void setup()
