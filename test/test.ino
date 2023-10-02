@@ -9,6 +9,7 @@ test(simple1)
 
 test(simple2)
 {
+  // test
   assertTrue(true);
 }
 
