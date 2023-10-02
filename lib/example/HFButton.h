@@ -12,13 +12,13 @@ template<typename PT, typename OT>
 class HFButton {
     public:
         typedef void (*Callable)(PT, OT);
-        
+
         HFButton(int pin);
         void tick();
 
         void attachPress(callbackFunction newFunction);
         void attachPress(Callable newFunction, char param);
-        void attachRelease(callbackFunction newFunction); 
+        void attachRelease(callbackFunction newFunction);
         void attachRelease(Callable newFunction, char param);
         void attachClick(callbackFunction pressFunction, callbackFunction releaseFunction);
         void attachClick(Callable pressFunction, Callable releaseFunction, PT param);
@@ -29,7 +29,7 @@ class HFButton {
         int _state = HIGH;
         int _prevState = HIGH;
         bool _wasPressed = false;
-        unsigned long _lastDebounceTime = 0; 
+        unsigned long _lastDebounceTime = 0;
         unsigned long _debounceDelay = 50;
 
         callbackFunction _pressFunc = NULL;
