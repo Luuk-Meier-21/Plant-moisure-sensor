@@ -9,9 +9,9 @@
  */
 class Sensor
 {
-    int id = 0;
-
 public:
+    typedef int (*ReaderFunction)(uint8_t);
+
     virtual void read() = 0;
     virtual float getCurrentReading() = 0;
     virtual int getId() = 0;
@@ -44,14 +44,14 @@ class SensorService
 public:
     SensorService(Sensor *_sensors[SIZE])
     {
-        for (int i = 0; i < SIZE; i++)
+        for (size_t i = 0; i < SIZE; i++)
         {
             sensors[i] = _sensors[i];
         }
     }
-    readAll()
+    void readAll()
     {
-        for (int i = 0; i < SIZE; i++)
+        for (size_t i = 0; i < SIZE; i++)
         {
             sensors[i]->read();
 
@@ -76,7 +76,7 @@ public:
         }
         SensorReadingResults<SIZE> data;
 
-        for (int i = 0; i < SIZE; i++)
+        for (size_t i = 0; i < SIZE; i++)
         {
             data.readings[i] = readings[i];
         }
@@ -85,4 +85,4 @@ public:
     }
 };
 
-#endif;
+#endif

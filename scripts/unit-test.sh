@@ -6,10 +6,10 @@ make
 
 if make run ; then
   make clean
-  echo "Tests successfull"
+  echo "*** Tests successfull ***"
   exit 0
 else
   make clean
-  echo "Tests failed"
+  echo "*** Tests failed ***"
   exit 1
 fi

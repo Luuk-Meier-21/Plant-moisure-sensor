@@ -11,7 +11,7 @@ class SerialReader
 public:
     SerialReader(Stream *stream) : serial_stream(stream) {}
 
-    void readAvailableToString()
+    void readAvailable()
     {
         while (serial_stream->available())
         {

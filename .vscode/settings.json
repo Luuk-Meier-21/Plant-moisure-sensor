@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "*.vml": "html",
+    "*.pde": "java",
+    "*.twig": "twig",
+    "new": "cpp"
+  }
+}

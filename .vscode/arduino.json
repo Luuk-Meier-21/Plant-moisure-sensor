@@ -1,5 +1,5 @@
 {
-    "board": "arduino:avr:uno",
-    "sketch": "main/main.ino",
-    "port": "/dev/tty.usbmodem1301"
+  "board": "arduino:avr:uno",
+  "sketch": "plant-saver.ino",
+  "port": "/dev/tty.usbmodem1301"
 }

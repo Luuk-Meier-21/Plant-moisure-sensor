@@ -17,9 +17,9 @@ SoftwareSerial EspSerial(12, 13); // RX | TX
 
 SerialReader serial_reader(&Serial), esp_serial_reader(&EspSerial);
 
-MoistureSensor *sensor_a = new MoistureSensor(1, sensor_pin_a);
-MoistureSensor *sensor_b = new MoistureSensor(2, sensor_pin_a);
-MoistureSensor *sensor_c = new MoistureSensor(3, sensor_pin_a);
+MoistureSensor *sensor_a = new MoistureSensor(1, sensor_pin_a, analogRead);
+MoistureSensor *sensor_b = new MoistureSensor(2, sensor_pin_a, analogRead);
+MoistureSensor *sensor_c = new MoistureSensor(3, sensor_pin_a, analogRead);
 
 Sensor *sensors[sensor_count] = {sensor_a, sensor_b, sensor_c};
 SensorService<sensor_count> sensor_service(sensors);
@@ -37,14 +37,14 @@ void setup()
 
 void loop()
 {
-  serial_reader.readAvailableToString();
+  serial_reader.readAvailable();
   if (serial_reader.hasData())
   {
     String data = serial_reader.extractData();
     EspSerial.print(data);
   }
 
-  esp_serial_reader.readAvailableToString();
+  esp_serial_reader.readAvailable();
   if (esp_serial_reader.hasData())
   {
     String data = esp_serial_reader.extractData();

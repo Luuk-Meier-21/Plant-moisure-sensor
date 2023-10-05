@@ -1,6 +1,10 @@
 #include "/Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.h"
-#include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnit.h"
 #include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
+
+// Test imports
+#include "/Users/luukmeier/Documents/Arduino/plant-saver/test/lib-tests/SensorService/SensorService.test.h"
+#include "/Users/luukmeier/Documents/Arduino/plant-saver/test/lib-tests/Sensors/MoistureSensor.test.h"
+#include "/Users/luukmeier/Documents/Arduino/plant-saver/test/lib-tests/SerialReader/SerialReader.test.h"
 
 test(simple1)
 {
