@@ -2,8 +2,6 @@
 #define MoistureSensor_h
 
 #include "Arduino.h"
-#include "stddef.h"
-using namespace std;
 #include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SensorService/SensorService.h"
 
 class MoistureSensor : public Sensor
@@ -26,8 +24,6 @@ public:
     virtual void read()
     {
         int sensor_reading = readFunc(pin);
-        // const char *a = (char *)sensor_reading;
-        // printf(a);
         moisture_percentage = (100 - ((sensor_reading / output_lowest) * 100));
     };
     virtual float getCurrentReading()

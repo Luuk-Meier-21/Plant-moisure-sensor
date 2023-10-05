@@ -2,7 +2,7 @@
 #include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
 
 #include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SensorService/SensorService.h"
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/Sensors/MoistureSensor.h"
+#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/MoistureSensor/MoistureSensor.h"
 
 #include "stddef.h"
 using namespace std;

@@ -1,13 +1,7 @@
-#include <AUnit.h>
-#include <AUnitVerbose.h>
-
-#include <EpoxyDuino.h>
-
 #include "SoftwareSerial.h"
 
 #include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SerialReader/SerialReader.h"
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/serial.h"
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/Sensors/MoistureSensor.h"
+#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/MoistureSensor/MoistureSensor.h"
 #include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SensorService/SensorService.h"
 
 #define sensor_pin_a A1
