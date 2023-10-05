@@ -1,5 +1,5 @@
 #ifndef SerialReader_h
-#define SerialReader_h_h
+#define SerialReader_h
 
 #include "Arduino.h"
 
