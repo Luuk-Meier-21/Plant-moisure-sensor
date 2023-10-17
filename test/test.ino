@@ -4,9 +4,9 @@
 #include "/Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.h"
 #include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
 
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SensorService/SensorService.test.h"
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/MoistureSensor/MoistureSensor.test.h"
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SerialReader/SerialReader.test.h"
+#include "../src/SensorService/SensorService.test.h"
+#include "../src/MoistureSensor/MoistureSensor.test.h"
+#include "../src/StreamReader/StreamReader.test.h"
 
 void setup()
 {

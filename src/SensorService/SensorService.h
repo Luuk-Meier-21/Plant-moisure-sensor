@@ -54,15 +54,6 @@ public:
         for (size_t i = 0; i < SIZE; i++)
         {
             sensors[i]->read();
-
-            // if (sensors[i]->getCurrentReading() > 0)
-            // {
-            //     Serial.print("Reading id:");
-            //     Serial.print(sensors[i]->getId());
-            //     Serial.print("value:");
-            //     Serial.print(sensors[i]->getCurrentReading());
-            //     Serial.print("%\n\n");
-            // }
         }
     }
 

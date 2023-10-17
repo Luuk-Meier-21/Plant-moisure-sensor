@@ -3,6 +3,12 @@
     "*.vml": "html",
     "*.pde": "java",
     "*.twig": "twig",
-    "new": "cpp"
-  }
+    "new": "cpp",
+    "plant-saver.ino.globals.h": "c",
+    "plant-saver": "cpp"
+  },
+  "arduino.additionalUrls": [
+    "src/**/*"
+  ]
+  // "C_Cpp.errorSquiggles": "disabled"
 }

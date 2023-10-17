@@ -1,8 +1,8 @@
 #include "/Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.h"
 #include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
 
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SensorService/SensorService.h"
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/MoistureSensor/MoistureSensor.h"
+#include "../../src/SensorService/SensorService.h"
+#include "../../src/MoistureSensor/MoistureSensor.h"
 
 #include "stddef.h"
 using namespace std;

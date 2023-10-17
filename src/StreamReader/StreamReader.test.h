@@ -1,7 +1,7 @@
 #include "/Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.h"
 #include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
 
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SerialReader/SerialReader.h"
+#include "../../src/StreamReader/StreamReader.h"
 
 #include "stddef.h"
 using namespace std;
@@ -49,7 +49,7 @@ public:
 test(SensorService_flushData)
 {
   MockSerial mock_serial;
-  SerialReader serial_reader(&mock_serial);
+  StreamReader serial_reader(&mock_serial);
 
   serial_reader.readAvailable();
   serial_reader.flushData();
@@ -62,7 +62,7 @@ test(SensorService_getData_5)
 {
   int count = 5;
   MockSerial mock_serial(count);
-  SerialReader serial_reader(&mock_serial);
+  StreamReader serial_reader(&mock_serial);
 
   serial_reader.readAvailable();
   String data = serial_reader.getData();
@@ -74,7 +74,7 @@ test(SensorService_getData_10)
 {
   int count = 5;
   MockSerial mock_serial(count);
-  SerialReader serial_reader(&mock_serial);
+  StreamReader serial_reader(&mock_serial);
 
   serial_reader.readAvailable();
   String data = serial_reader.getData();
@@ -86,7 +86,7 @@ test(SensorService_getData_15)
 {
   int count = 5;
   MockSerial mock_serial(count);
-  SerialReader serial_reader(&mock_serial);
+  StreamReader serial_reader(&mock_serial);
 
   serial_reader.readAvailable();
   String data = serial_reader.getData();
@@ -98,7 +98,7 @@ test(SensorService_extractData)
 {
   int count = 5;
   MockSerial mock_serial(count);
-  SerialReader serial_reader(&mock_serial);
+  StreamReader serial_reader(&mock_serial);
 
   serial_reader.readAvailable();
   String data = serial_reader.extractData();

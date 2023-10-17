@@ -1,5 +1,6 @@
 {
-  "board": "arduino:avr:uno",
-  "sketch": "plant-saver.ino",
-  "port": "/dev/tty.usbmodem1301"
+    "board": "esp8266:esp8266:nodemcu",
+    "sketch": "plant-saver.ino",
+    "port": "/dev/tty.SLAB_USBtoUART",
+    "configuration": "xtal=80,vt=flash,exception=disabled,stacksmash=disabled,ssl=all,mmu=3232,non32xfer=fast,eesz=4M2M,ip=lm2f,dbg=Disabled,lvl=None____,wipe=none,baud=115200"
 }

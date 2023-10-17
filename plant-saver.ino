@@ -1,62 +1,88 @@
-#include "SoftwareSerial.h"
 
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SerialReader/SerialReader.h"
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/MoistureSensor/MoistureSensor.h"
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SensorService/SensorService.h"
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 
-#define sensor_pin_a A1
-const int sensor_count = 3;
+#include "src/.env/env.h"
+#include "src/MoistureSensor/MoistureSensor.h"
 
-SoftwareSerial EspSerial(12, 13); // RX | TX
+String serverName = "https://api.thingspeak.com/update";
 
-SerialReader serial_reader(&Serial), esp_serial_reader(&EspSerial);
+unsigned long lastTime = 0;
+unsigned long timerDelay = 5000;
+unsigned int count = 0;
 
-MoistureSensor *sensor_a = new MoistureSensor(1, sensor_pin_a, analogRead);
-MoistureSensor *sensor_b = new MoistureSensor(2, sensor_pin_a, analogRead);
-MoistureSensor *sensor_c = new MoistureSensor(3, sensor_pin_a, analogRead);
+int id = 0;
+int pin = A0;
 
-Sensor *sensors[sensor_count] = {sensor_a, sensor_b, sensor_c};
-SensorService<sensor_count> sensor_service(sensors);
+MoistureSensor *moisture_sensor_a = new MoistureSensor(id, pin, analogRead);
 
 void setup()
 {
   Serial.begin(9600);
-  EspSerial.begin(9600);
-  while (!Serial)
+
+  WiFi.begin(_p.hotspot.ssid, _p.hotspot.password);
+  Serial.println("Connecting");
+  while (WiFi.status() != WL_CONNECTED)
   {
-    ;
+    delay(500);
+    Serial.print(".");
   }
-  pinMode(4, OUTPUT);
+  Serial.println("");
+  Serial.print("Connected to WiFi network with IP Address: ");
+  Serial.println(WiFi.localIP());
+
+  Serial.println("Timer set to 5 seconds (timerDelay variable), it will take 5 seconds before publishing the first reading.");
 }
 
 void loop()
 {
-  serial_reader.readAvailable();
-  if (serial_reader.hasData())
+  // Send an HTTP POST request depending on timerDelay
+  if ((millis() - lastTime) > timerDelay)
   {
-    String data = serial_reader.extractData();
-    EspSerial.print(data);
-  }
+    count = count + 1;
 
-  esp_serial_reader.readAvailable();
-  if (esp_serial_reader.hasData())
-  {
-    String data = esp_serial_reader.extractData();
-    Serial.print(data);
-  }
-
-  sensor_service.readAll();
-  SensorReadingResults<sensor_count> data = sensor_service.getCurrentReadings();
-
-  for (size_t i = 0; i < sensor_count; i++)
-  {
-    if (data.readings[i].value > 0)
+    // Check WiFi connection status
+    if (WiFi.status() == WL_CONNECTED)
     {
-      Serial.print("Reading id: ");
-      Serial.print(data.readings[i].id);
-      Serial.print(" value: ");
-      Serial.print(data.readings[i].value);
-      Serial.print("%\n\n");
+      WiFiClientSecure client;
+      // Very insecure, but it should not matter for this case.
+      client.setInsecure();
+      HTTPClient http;
+
+      String serverPath = serverName + "?api_key=" + API_WRITE_KEY + "&field1=" + (String)count;
+
+      Serial.print("Path: ");
+      Serial.println(serverPath.c_str());
+
+      // Your Domain name with URL path or IP address with path
+      http.begin(client, serverPath.c_str());
+
+      // If you need Node-RED/server authentication, insert user and password below
+      // http.setAuthorization("REPLACE_WITH_SERVER_USERNAME", "REPLACE_WITH_SERVER_PASSWORD");
+
+      // Send HTTP GET request
+      int httpResponseCode = http.GET();
+
+      if (httpResponseCode > 0)
+      {
+        Serial.print("HTTP Response code: ");
+        Serial.println(httpResponseCode);
+        String payload = http.getString();
+        Serial.println(payload);
+      }
+      else
+      {
+        Serial.print("Error code: ");
+        Serial.println(httpResponseCode);
+      }
+      // Free resources
+      http.end();
     }
+    else
+    {
+      Serial.println("WiFi Disconnected");
+    }
+    lastTime = millis();
   }
 }

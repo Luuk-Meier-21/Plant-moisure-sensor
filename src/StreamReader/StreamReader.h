@@ -1,15 +1,13 @@
-#ifndef SerialReader_h
-#define SerialReader_h
+#ifndef StreamReader_h
+#define StreamReader_h
 
-#include "Arduino.h"
-
-class SerialReader
+class StreamReader
 {
     Stream *serial_stream;
     String data;
 
 public:
-    SerialReader(Stream *stream) : serial_stream(stream) {}
+    StreamReader(Stream *stream) : serial_stream(stream) {}
 
     void readAvailable()
     {
@@ -48,4 +46,4 @@ public:
     }
 };
 
-#endif;
+#endif

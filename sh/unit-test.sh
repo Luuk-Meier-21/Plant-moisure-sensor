@@ -6,12 +6,18 @@ NC='\033[0m'
 
 cd ./test
 make clean
-make
 
+if OUTPUT=$(make) ; then
+  echo -e "${GREEN}Compile successfull${NC}"
+else
+  # echo "${RED}${OUTPUT}${NC}"
+  echo -e "${RED}Compile failed${NC}"
+  exit 1
+fi
 
 if OUTPUT=$(make run) ; then
   make clean
-  echo "$OUTPUT"
+  # echo "$OUTPUT"
   echo -e "${GREEN}Tests successfull${NC}"
   exit 0
 else

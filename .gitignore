@@ -1,2 +1,3 @@
 .env
-# .env/Credentials.h
+src/.env
+# src/.env/Credentials.h

@@ -2,7 +2,7 @@
 #define MoistureSensor_h
 
 #include "Arduino.h"
-#include "/Users/luukmeier/Documents/Arduino/plant-saver/lib/SensorService/SensorService.h"
+#include "../../src/SensorService/SensorService.h"
 
 class MoistureSensor : public Sensor
 {
