@@ -7,8 +7,5 @@
     "plant-saver.ino.globals.h": "c",
     "plant-saver": "cpp"
   },
-  "arduino.additionalUrls": [
-    "src/**/*"
-  ]
-  // "C_Cpp.errorSquiggles": "disabled"
+  "arduino.additionalUrls": ["/Users/luukmeier/Documents/Arduino/plant-saver/src/**/*"]
 }

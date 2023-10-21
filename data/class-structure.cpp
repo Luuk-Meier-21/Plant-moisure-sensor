@@ -1,9 +1,9 @@
 // Supresses vscode error squiggles:
-#ifdef __INTELLISENSE__
-#pragma diag_suppress
-#endif;
+// #ifdef __INTELLISENSE__
+// #pragma diag_suppress
+// #endif;
 
-#include <Arduino.h>
+// #include <Arduino.h>
 
 struct WiFiNetwork
 {

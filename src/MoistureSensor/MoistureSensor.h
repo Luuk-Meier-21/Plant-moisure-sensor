@@ -1,7 +1,6 @@
 #ifndef MoistureSensor_h
 #define MoistureSensor_h
 
-#include "Arduino.h"
 #include "../../src/SensorService/SensorService.h"
 
 class MoistureSensor : public Sensor

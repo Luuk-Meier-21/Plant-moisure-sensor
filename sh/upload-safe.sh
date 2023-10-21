@@ -9,7 +9,8 @@ NC='\033[0m'
 cd ./test
 make clean
 
-echo -e "${YELLOW}Compiling test...${NC}"
+echo -e "\r${YELLOW}Compiling test...${NC}"
+echo -e "\r|                    |"
 if OUTPUT=$(make) ; then
   echo -e "${GREEN}Test compiliation successfull${NC}"
 else
@@ -18,7 +19,9 @@ else
   exit 1
 fi
 
-echo -e "${YELLOW}Testing...${NC}"
+
+echo -e "\r${YELLOW}Testing...${NC}"
+echo -e "\r|#####               |"
 if OUTPUT=$(make run) ; then
   make clean
   # echo "$OUTPUT"
@@ -30,10 +33,12 @@ else
   exit 1
 fi
 
+
 cd ../
 
 # 2. Compile
-echo -e "${YELLOW}Compiling sketch...${NC}"
+echo -e "\r${YELLOW}Compiling sketch...${NC}"
+echo -e "\r|##########          |"
 if OUTPUT=$(arduino-cli compile) ; then
   echo -e "${GREEN}Compile successfull${NC}"
 else
@@ -43,5 +48,9 @@ else
 fi
 
 # 2. Upload
+echo -e "${YELLOW}Uploading sketch...${NC}"
+echo -e "|###############     |"
 
-
+echo -e "${GREEN}Done${NC}"
+echo -e "|####################|"
+exit 0;

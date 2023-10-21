@@ -1,7 +1,7 @@
 #ifndef SensorService_h
 #define SensorService_h
 
-#include "Arduino.h"
+#include "../../src/SensorReading/SensorReading.h"
 
 /**
  * Sensor interface
@@ -18,23 +18,14 @@ public:
     virtual ~Sensor() = default;
 };
 
-/**
- * A struct holding a id, and matching value of a sensor reading.
- */
-struct SensorReading
-{
-    int id;
-    float value;
-};
-
-/**
- * A wrapper struct holding multiple sensor readings.
- */
-template <size_t SIZE>
-struct SensorReadingResults
-{
-    SensorReading readings[SIZE];
-};
+// template <size_t SIZE>
+// class SensorResults
+// {
+// public:
+//     virtual void set() = 0;
+//     virtual get() = 0;
+//     virtual ~SensorResults() = default;
+// };
 
 template <size_t SIZE>
 class SensorService

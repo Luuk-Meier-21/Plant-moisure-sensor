@@ -1,5 +1,4 @@
-#include "/Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.h"
-#include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
+#include <AUnitVerbose.h>
 
 #include "../../src/StreamReader/StreamReader.h"
 
