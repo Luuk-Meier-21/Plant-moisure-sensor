@@ -23,18 +23,18 @@ void setup()
 
 void loop()
 {
-  sensor_service.readAll();
-  SensorReadingResults results = sensor_service.getCurrentReadings();
+  SensorResultsClient<sensor_count> results;
+  sensor_service.readAllToResults(&results);
 
   results.forEach(sensorReading);
 }
 
-void sensorReading(SensorReading reading)
+void sensorReading(SensorReading *reading)
 {
   Serial.print("Reading id: ");
-  Serial.print(reading.id);
+  Serial.print(reading->id);
   Serial.print(" value: ");
-  Serial.print(reading.value);
+  Serial.print(reading->value);
   Serial.print("%\n\n");
   delay(100);
 }

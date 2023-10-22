@@ -1,5 +1,8 @@
 {
     "version": 4,
+    "env": {
+        "myDefaultIncludePath": ["${workspaceFolder}", "${workspaceFolder}/src"]
+    },
     "configurations": [
         {
             "name": "Arduino",
@@ -16,8 +19,9 @@
                 "-std=gnu++17"
             ],
             "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "vscode.arduino",
             "includePath": [
-                "${workspaceFolder}/src/**/*",
+                "${workspaceFolder}/**",
                 "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src",
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/hardware/esp8266/3.1.2/tools/sdk/include",
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/hardware/esp8266/3.1.2/tools/sdk/lwip2/include",
@@ -38,7 +42,7 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": false,
                 "path": [
-                  "${workspaceFolder}/**/*"
+                  "${workspaceFolder}"
                 ]
               },
             "cStandard": "c11",

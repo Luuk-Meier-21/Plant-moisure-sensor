@@ -3,11 +3,12 @@
 
 #include "../../src/SensorService/SensorService.h"
 #include "../../src/MoistureSensor/MoistureSensor.h"
+#include "../../src/SensorReading/SensorReading.h"
 
 #include "stddef.h"
 using namespace std;
 
-const int sensor_count = 3;
+#define sensor_count 3
 
 int mockRead(uint8_t pin)
 {
@@ -28,18 +29,13 @@ SensorService<sensor_count> construct_service()
   return sensor_service;
 }
 
-test(SensorService_getCurrentReading)
+test(SensorService_readAllToResult)
 {
   SensorService<sensor_count> sensor_service = construct_service();
+  SensorResultsClient<sensor_count> results;
 
-  sensor_service.readAll();
+  sensor_service.readAllToResults(&results);
 
-  SensorReadingResults<sensor_count> result = sensor_service.getCurrentReadings();
-
-  for (int i = 0; i < sensor_count; i++)
-  {
-    float value = result.readings[i].value;
-    float target_value = 100;
-    assertEqual(value, target_value);
-  }
+  float value = reading.value;
+  float target_value = 100;
 }

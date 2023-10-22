@@ -5,7 +5,18 @@
     "*.twig": "twig",
     "new": "cpp",
     "plant-saver.ino.globals.h": "c",
-    "plant-saver": "cpp"
+    "plant-saver": "cpp",
+    "*.tcc": "cpp",
+    "memory": "cpp",
+    "functional": "cpp",
+    "string": "cpp",
+    "optional": "cpp",
+    "istream": "cpp",
+    "ostream": "cpp",
+    "system_error": "cpp",
+    "array": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp"
   },
-  "arduino.additionalUrls": ["/Users/luukmeier/Documents/Arduino/plant-saver/src/**/*"]
 }
