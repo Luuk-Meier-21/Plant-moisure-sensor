@@ -1,6 +1,6 @@
 // Supresses vscode error squiggles:
 // #ifdef __INTELLISENSE__
-// #pragma diag_suppress
+#pragma diag_suppress
 // #endif;
 
 // #include <Arduino.h>
@@ -22,7 +22,7 @@ public:
 }
 
 // Class for scanning networks and joining based on given possible credentail pair.
-class AutoConnectingWifiService
+class AutoConnectingWifiClinet
 {
 
 public:

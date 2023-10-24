@@ -1,3 +1,6 @@
+#ifndef MoistureSensor_Test_h
+#define MoistureSensor_Test_h
+
 #include "/Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.h"
 #include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
 
@@ -54,3 +57,5 @@ test(MoistureSensor_getId)
 
   assertEqual(sensor_id, (int)id);
 }
+
+#endif

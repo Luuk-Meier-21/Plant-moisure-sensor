@@ -4,7 +4,6 @@
 #include "src/StreamReader/StreamReader.h"
 #include "src/MoistureSensor/MoistureSensor.h"
 #include "src/SensorService/SensorService.h"
-#include "src/SensorReading/SensorReading.h"
 
 #define sensor_pin A0
 const int sensor_count = 1;
@@ -18,23 +17,24 @@ SensorService<sensor_count> sensor_service(sensors);
 
 void setup()
 {
+  while (!Serial)
+  {
+    ;
+  };
   Serial.begin(9600);
 }
 
 void loop()
 {
-  SensorResultsClient<sensor_count> results;
-  sensor_service.readAllToResults(&results);
-
-  results.forEach(sensorReading);
+  sensor_service.readAll();
+  sensor_service.forEach(onSensor);
+  delay(100);
 }
 
-void sensorReading(SensorReading *reading)
+void onSensor(Sensor *sensor)
 {
-  Serial.print("Reading id: ");
-  Serial.print(reading->id);
-  Serial.print(" value: ");
-  Serial.print(reading->value);
-  Serial.print("%\n\n");
-  delay(100);
+  Serial.print("Value: ");
+  Serial.print(sensor->getCurrentReading());
+  Serial.print(":");
+  Serial.println(sensor->getId());
 }

@@ -18,6 +18,16 @@ public:
     valid = true;
   };
 
+  String getSsid()
+  {
+    return ssid;
+  }
+
+  String getPassword()
+  {
+    return password;
+  }
+
   bool isValid()
   {
     return valid;

@@ -3,39 +3,60 @@
 
 #include "../../src/SensorService/SensorService.h"
 #include "../../src/MoistureSensor/MoistureSensor.h"
-#include "../../src/SensorReading/SensorReading.h"
 
 #include "stddef.h"
 using namespace std;
 
 #define sensor_count 3
 
-int mockRead(uint8_t pin)
+class SensorServiceTest
 {
-  (void)pin;
+public:
+  static int mockReadHighest(uint8_t pin)
+  {
+    (void)pin;
 
-  return MoistureSensor::output_highest;
-}
+    return MoistureSensor::output_highest;
+  }
 
-// TODO: add more abstractions of Sensor class here:
-SensorService<sensor_count> construct_service()
+  static int mockReadLowest(uint8_t pin)
+  {
+    (void)pin;
+
+    return MoistureSensor::output_lowest;
+  }
+
+  static int mockReadRandom(uint8_t pin)
+  {
+    (void)pin;
+
+    return std::rand() * MoistureSensor::output_highest;
+  }
+};
+
+test(SensorService_readAll)
 {
-  MoistureSensor *sensor_a = new MoistureSensor(1, 1, mockRead);
-  MoistureSensor *sensor_b = new MoistureSensor(2, 2, mockRead);
-  MoistureSensor *sensor_c = new MoistureSensor(3, 3, mockRead);
+  MoistureSensor *sensor_a = new MoistureSensor(1, 1, SensorServiceTest::mockReadRandom);
+  MoistureSensor *sensor_b = new MoistureSensor(2, 2, SensorServiceTest::mockReadRandom);
+  MoistureSensor *sensor_c = new MoistureSensor(3, 3, SensorServiceTest::mockReadRandom);
 
-  Sensor *sensors[sensor_count] = {sensor_a, sensor_b, sensor_c};
+  Sensor *sensors[] = {sensor_a, sensor_b, sensor_c};
   SensorService<sensor_count> sensor_service(sensors);
-  return sensor_service;
-}
 
-test(SensorService_readAllToResult)
-{
-  SensorService<sensor_count> sensor_service = construct_service();
-  SensorResultsClient<sensor_count> results;
+  sensor_service.readAll();
 
-  sensor_service.readAllToResults(&results);
+  for (size_t i = 0; i < sensor_count; i++)
+  {
+    Sensor *sensor = sensor_service.getSensorOfIndex(i);
 
-  float value = reading.value;
-  float target_value = 100;
+    int target_id = sensors[i]->getId();
+    int id = sensor->getId();
+    // printf("id%i: %i / %i\n", int(i), id, target_id);
+    assertEqual(id, target_id);
+
+    float target_value = sensors[i]->getCurrentReading();
+    float value = sensor->getCurrentReading();
+    // printf("value%i: %f / %f\n", int(i), value, target_value);
+    assertEqual(value, target_value);
+  }
 }

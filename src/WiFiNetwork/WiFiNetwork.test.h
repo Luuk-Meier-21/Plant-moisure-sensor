@@ -18,3 +18,19 @@ test(WiFiNetwork_empty_constructor)
 
   assertFalse(network.isValid());
 }
+
+test(WiFiNetwork_getSsid)
+{
+  String ssid = "12345-ssid";
+  WiFiNetwork network(ssid, "pass");
+
+  assertEqual(network.getSsid(), ssid);
+}
+
+test(WiFiNetwork_getPassword)
+{
+  String pass = "12345-pass";
+  WiFiNetwork network("ssid", pass);
+
+  assertEqual(network.getPassword(), pass);
+}

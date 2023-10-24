@@ -16,33 +16,6 @@ public:
     virtual ~Sensor() = default;
 };
 
-struct SensorReading
-{
-    int id;
-    float value;
-
-    SensorReading(int id, float value) : id(id), value(value){};
-    SensorReading(Sensor *sensor)
-    {
-        id = sensor->getId();
-        value = sensor->getCurrentReading();
-    }
-    SensorReading(){};
-    static SensorReading empty()
-    {
-        SensorReading empty_reading;
-        return empty_reading;
-    }
-};
-
-template <size_t SIZE>
-class SensorResults
-{
-public:
-    virtual void set(SensorReading *readings[SIZE]) = 0;
-    virtual ~SensorResults() = default;
-};
-
 template <size_t SIZE>
 class SensorService
 {
@@ -64,46 +37,70 @@ public:
         }
     }
 
-    // void readAllToArray(SensorReading *array[SIZE])
+    void forEach(void (*func)(Sensor *))
+    {
+        for (size_t i = 0; i < SIZE; i++)
+        {
+            func(sensors[i]);
+        };
+    };
+
+    size_t count()
+    {
+        return SIZE;
+    }
+
+    Sensor *getSensorOfIndex(size_t index)
+    {
+        if (index > SIZE)
+        {
+            return NULL;
+        }
+        return sensors[index];
+    }
+
+    // template <class DataType>
+    // void toArray(DataType *array[SIZE], DataType (*factory)(Sensor *))
     // {
-    //     SensorReading readings[SIZE];
     //     for (size_t i = 0; i < SIZE; i++)
     //     {
     //         sensors[i]->read();
-    //         readings[i](sensors[i]);
+    //         DataType data = factory(sensors[i]);
+    //         // TIL: for some reason `array = &data` works but `*array = data` does not.
+    //         // Expected: because data goes out of scope at function end, a pointer to it
+    //         // would also fall out of scope at :78
+    //         // Instead: it only works when the adress to data is pass to the array, why?
+    //         array[i] = &data;
     //     }
-    //     *array = readings;
     // }
 
-    void readAllToResults(SensorResults<SIZE> *results)
-    {
-        SensorReading *readings[SIZE];
-        for (size_t i = 0; i < SIZE; i++)
-        {
-            sensors[i]->read();
-            SensorReading a(sensors[i]);
-            readings[i] = &a;
-        }
-        results->set(readings);
-    }
-
-    // template <size_t SIZE, class ResultType>
-    // SensorResults<SIZE> getCurrentReadings()
+    // void readAllToSensorReadingArray(SensorReading *array[SIZE])
     // {
-    //     SensorReading readings[SIZE];
     //     for (size_t i = 0; i < SIZE; i++)
     //     {
-    //         readings[i].id = sensors[i]->getId();
-    //         readings[i].value = sensors[i]->getCurrentReading();
+    //         sensors[i]->read();
+    //         SensorReading reading(sensors[i]);
+    //         *array[i] = reading;
     //     }
-    //     SensorResults<SIZE> data;
+    // }
 
+    // void readAllToSensorReadingArray(SensorReading *array[SIZE])
+    // {
     //     for (size_t i = 0; i < SIZE; i++)
     //     {
-    //         data.readings[i] = readings[i];
+    //         sensors[i]->read();
+    //         SensorReading reading(sensors[i]);
+    //         array[i] = &reading;
     //     }
+    // }
 
-    //     return data;
+    // void readAllToResults(SensorResults<SIZE> *results)
+    // {
+    //     for (size_t i = 0; i < SIZE; i++)
+    //     {
+    //         sensors[i]->read();
+    //     }
+    //     results->resultsFromSensors(sensors);
     // }
 };
 
