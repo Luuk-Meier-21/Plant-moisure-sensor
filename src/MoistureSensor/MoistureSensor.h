@@ -1,7 +1,7 @@
 #ifndef MoistureSensor_h
 #define MoistureSensor_h
 
-#include "../../src/SensorService/SensorService.h"
+#include "../../src/SensorClient/SensorClient.h"
 
 class MoistureSensor : public Sensor
 {

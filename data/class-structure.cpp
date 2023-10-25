@@ -18,15 +18,26 @@ public:
   WiFiCredentials(WiFiCredentialsPair[SIZE] credentials);
 
   WiFiNetwork findCurrent(ESP8266WiFiClass wifi);
-  size_t getLength();
+  size_t count();
+}
+
+template <size_t SIZE>
+class SensorClient
+{
+public:
+  SensorClient(Sensor *_sensors[SIZE]);
+
+  void readAll(){};
+  void forEach(void (*func)(Sensor *)){};
+  size_t count(){};
+  Sensor *getSensorOfIndex(size_t index){};
 }
 
 // Class for scanning networks and joining based on given possible credentail pair.
-class AutoConnectingWifiClinet
+class DiscoveringWiFiClient
 {
-
 public:
-  AutoConnectingWifiService(ESP8266WiFiClass wifi, WiFiCredentialsList network_options){};
+  DiscoveringWifiClient(ESP8266WiFiClass wifi, DynamicWiFiNetwork network_options){};
 
   void beginConnection(){};
 

@@ -2,8 +2,7 @@
 #define SensorService_h
 
 /**
- * Sensor interface
- * Provides all required methods for injecting a class into `SensorService`
+ * Interface for different Sensor services.
  */
 class Sensor
 {
@@ -16,13 +15,16 @@ public:
     virtual ~Sensor() = default;
 };
 
+/**
+ * Client for manipulating passed Sensor services.
+ */
 template <size_t SIZE>
-class SensorService
+class SensorClient
 {
     Sensor *sensors[SIZE];
 
 public:
-    SensorService(Sensor *_sensors[SIZE])
+    SensorClient(Sensor *_sensors[SIZE])
     {
         for (size_t i = 0; i < SIZE; i++)
         {

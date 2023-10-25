@@ -18,17 +18,17 @@ public:
     valid = true;
   };
 
-  String getSsid()
+  String getSsid() const
   {
     return ssid;
   }
 
-  String getPassword()
+  String getPassword() const
   {
     return password;
   }
 
-  bool isValid()
+  bool isValid() const
   {
     return valid;
   };

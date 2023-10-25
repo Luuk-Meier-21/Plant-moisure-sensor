@@ -4,7 +4,7 @@
 #include "/Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.h"
 #include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
 
-#include "../../src/SensorService/SensorService.h"
+#include "../../src/SensorClient/SensorClient.h"
 #include "../../src/MoistureSensor/MoistureSensor.h"
 
 #include "stddef.h"

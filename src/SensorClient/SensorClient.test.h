@@ -1,7 +1,7 @@
 #include "/Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.h"
 #include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
 
-#include "../../src/SensorService/SensorService.h"
+#include "../../src/SensorClient/SensorClient.h"
 #include "../../src/MoistureSensor/MoistureSensor.h"
 
 #include "stddef.h"
@@ -41,7 +41,7 @@ test(SensorService_readAll)
   MoistureSensor *sensor_c = new MoistureSensor(3, 3, SensorServiceTest::mockReadRandom);
 
   Sensor *sensors[] = {sensor_a, sensor_b, sensor_c};
-  SensorService<sensor_count> sensor_service(sensors);
+  SensorClient<sensor_count> sensor_service(sensors);
 
   sensor_service.readAll();
 
