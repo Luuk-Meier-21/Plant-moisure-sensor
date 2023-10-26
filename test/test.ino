@@ -9,6 +9,7 @@
 #include "../src/WiFiNetwork/WiFiNetwork.test.h"
 #include "../src/DynamicWiFiNetwork/DynamicWiFiNetwork.test.h"
 #include "../src/DiscoveringWiFiClient/DiscoveringWiFiClient.test.h"
+#include "../src/MockHTTPClient/MockHTTPClient.h"
 
 void setup()
 {

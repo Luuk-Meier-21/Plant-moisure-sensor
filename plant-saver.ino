@@ -9,8 +9,8 @@
 #include "src/MoistureSensor/MoistureSensor.h"
 #include "src/SensorClient/SensorClient.h"
 #include "src/DynamicWiFiNetwork/DynamicWiFiNetwork.h"
-
 #include "src/DiscoveringWiFiClient/DiscoveringWiFiClient.h"
+#include "src/HTTPRequestClient/HTTPRequestClient.h"
 
 #define sensor_pin A0
 const int sensor_count = 1;
@@ -28,6 +28,8 @@ SensorClient<sensor_count> sensor_service(sensors);
 DynamicWiFiNetwork<network_count> dynamic_network(private_networks);
 DiscoveringWiFiClient<network_count> discoveringNetworkClient(WiFi, &dynamic_network);
 
+String serverName = "https://api.thingspeak.com/update";
+
 void setup()
 {
   while (!Serial)
@@ -35,14 +37,14 @@ void setup()
   };
   Serial.begin(9600);
 
-  if (discoveringNetworkClient.scan() == false)
+  if (!discoveringNetworkClient.scan())
   {
     reportError("No network found.");
   }
 
   discoveringNetworkClient.beginConnection();
 
-  if (discoveringNetworkClient.awaitConnection(awaitConnection, 5000) == false)
+  if (!discoveringNetworkClient.awaitConnection(awaitConnection, 5000))
   {
     reportError("Unable to connect to network.");
   }
@@ -58,8 +60,12 @@ void awaitConnection()
   delay(500);
 }
 
+unsigned long count = 0;
+
 void loop()
 {
+  count += 1;
+
   sensor_service.readAll();
   sensor_service.forEach(onSensor);
 
@@ -69,11 +75,12 @@ void loop()
     // Very insecure, but it should not matter for this case.
     client.setInsecure();
     HTTPClient http;
+    HTTPRequestClient requestClient(&client, &http);
 
-    // String serverPath = serverName + "?api_key=" + API_WRITE_KEY + "&field1=" + (String)count;
+    String url = serverName + "?api_key=" + API_WRITE_KEY + "&field1=" + (String)count;
   };
 
-  delay(100);
+  delay(1000);
 }
 
 void onSensor(Sensor *sensor)

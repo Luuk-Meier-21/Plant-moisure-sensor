@@ -47,7 +47,7 @@ void loop()
     if (WiFi.status() == WL_CONNECTED)
     {
       WiFiClientSecure client;
-      // Very insecure, but it should not matter for this case.
+      // Very insecure, but it should not matter for this use case.
       client.setInsecure();
       HTTPClient http;
 
