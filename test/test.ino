@@ -3,8 +3,6 @@
 
 #define TEST
 
-#include <AUnitVerbose.h>
-
 #include "../src/SensorClient/SensorClient.test.h"
 #include "../src/MoistureSensor/MoistureSensor.test.h"
 #include "../src/StreamReader/StreamReader.test.h"
