@@ -1,5 +1,3 @@
-#include <AUnitVerbose.h>
-
 #include "../../src/WiFiNetwork/WiFiNetwork.h"
 
 #include "stddef.h"

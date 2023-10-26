@@ -1,8 +1,6 @@
 #ifndef DynamicWiFiNetwork_test_h
 #define DynamicWiFiNetwork_test_h
 
-#include <AUnitVerbose.h>
-
 #include "../../src/WiFiNetwork/WiFiNetwork.h"
 #include "../../src/DynamicWiFiNetwork/DynamicWiFiNetwork.h"
 

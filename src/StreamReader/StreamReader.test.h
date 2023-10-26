@@ -1,5 +1,3 @@
-#include <AUnitVerbose.h>
-
 #include "../../src/StreamReader/StreamReader.h"
 
 #include "stddef.h"

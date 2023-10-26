@@ -1,13 +1,9 @@
 #ifndef DiscoveringWiFiCLient_test_h
 #define DiscoveringWiFiCLient_test_h
 
-#include <AUnitVerbose.h>
-
 #include "../../src/WiFiNetwork/WiFiNetwork.h"
 #include "../../src/DynamicWiFiNetwork/DynamicWiFiNetwork.h"
 #include "../../src/DiscoveringWiFiClient/DiscoveringWiFiClient.h"
-
-#define TEST
 
 #include "../../src/MockESP8266Class/MockESP8266Class.h"
 

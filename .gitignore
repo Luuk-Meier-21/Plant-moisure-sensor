@@ -1,4 +1,5 @@
 .env
-.vscode
+.vscode/
+c_cpp_properties.json
 build
 # src/.env/Credentials.h

@@ -1,8 +1,5 @@
 {
     "version": 4,
-    "env": {
-        "myDefaultIncludePath": ["${workspaceFolder}", "${workspaceFolder}/src"]
-    },
     "configurations": [
         {
             "name": "Arduino",
@@ -20,14 +17,13 @@
             ],
             "intelliSenseMode": "gcc-x64",
             "includePath": [
-                // "${workspaceFolder}/**",
-                "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src",
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/hardware/esp8266/3.1.2/tools/sdk/include",
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/hardware/esp8266/3.1.2/tools/sdk/lwip2/include",
-                "/private/var/folders/7t/n0lgk64d715gxj6fnjmh6hxw0000gn/T/arduino-sketch-ADDDB916EDA240543CD35960F74CB13A/core",
+                "/Users/luukmeier/Documents/Arduino/plant-saver/build/core",
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/hardware/esp8266/3.1.2/cores/esp8266",
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/hardware/esp8266/3.1.2/variants/nodemcu",
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/hardware/esp8266/3.1.2/libraries/ESP8266WiFi/src",
+                "/Users/luukmeier/Library/Arduino15/packages/esp8266/hardware/esp8266/3.1.2/libraries/ESP8266HTTPClient/src",
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/tools/xtensa-lx106-elf-gcc/3.1.0-gcc10.3-e5f9fec/xtensa-lx106-elf/include/c++/10.3.0",
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/tools/xtensa-lx106-elf-gcc/3.1.0-gcc10.3-e5f9fec/xtensa-lx106-elf/include/c++/10.3.0/xtensa-lx106-elf",
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/tools/xtensa-lx106-elf-gcc/3.1.0-gcc10.3-e5f9fec/xtensa-lx106-elf/include/c++/10.3.0/backward",
@@ -38,12 +34,6 @@
             "forcedInclude": [
                 "/Users/luukmeier/Library/Arduino15/packages/esp8266/hardware/esp8266/3.1.2/cores/esp8266/Arduino.h"
             ],
-            // "browse": {
-            //     "limitSymbolsToIncludedHeaders": false,
-            //     "path": [
-            //       "${workspaceFolder}"
-            //     ]
-            //   },
             "cStandard": "c11",
             "cppStandard": "c++17",
             "defines": [
@@ -60,12 +50,11 @@
                 "LWIP_FEATURES=1",
                 "LWIP_IPV6=0",
                 "ARDUINO=10607",
-                "ARDUINO_ESP8266_NODEMCU_ESP12E",
+                "ARDUINO_ESP8266_NODEMCU_ESP12",
                 "ARDUINO_ARCH_ESP8266",
-                "ARDUINO_BOARD=\"ESP8266_NODEMCU_ESP12E\"",
-                "ARDUINO_BOARD_ID=\"nodemcuv2\"",
-                "LED_BUILTIN=2",
-                "FLASHMODE_DIO",
+                "ARDUINO_BOARD=\"ESP8266_NODEMCU_ESP12\"",
+                "ARDUINO_BOARD_ID=\"nodemcu\"",
+                "FLASHMODE_QIO",
                 "__DBL_MIN_EXP__=(-1021)",
                 "__cpp_attributes=200809L",
                 "__UINT_LEAST16_MAX__=0xffff",

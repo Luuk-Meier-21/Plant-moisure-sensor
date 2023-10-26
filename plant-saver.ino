@@ -1,12 +1,15 @@
 #define CORE
 
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 
 #include "src/.env/env.h"
 #include "src/StreamReader/StreamReader.h"
 #include "src/MoistureSensor/MoistureSensor.h"
 #include "src/SensorClient/SensorClient.h"
 #include "src/DynamicWiFiNetwork/DynamicWiFiNetwork.h"
+
 #include "src/DiscoveringWiFiClient/DiscoveringWiFiClient.h"
 
 #define sensor_pin A0
@@ -57,9 +60,20 @@ void awaitConnection()
 
 void loop()
 {
-  // sensor_service.readAll();
-  // sensor_service.forEach(onSensor);
-  // delay(100);
+  sensor_service.readAll();
+  sensor_service.forEach(onSensor);
+
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    WiFiClientSecure client;
+    // Very insecure, but it should not matter for this case.
+    client.setInsecure();
+    HTTPClient http;
+
+    // String serverPath = serverName + "?api_key=" + API_WRITE_KEY + "&field1=" + (String)count;
+  };
+
+  delay(100);
 }
 
 void onSensor(Sensor *sensor)
