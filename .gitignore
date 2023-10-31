@@ -2,5 +2,5 @@
 .vscode
 .vscode/
 build
-data
+data/
 # src/.env/Credentials.h

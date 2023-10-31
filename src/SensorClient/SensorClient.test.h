@@ -1,11 +1,8 @@
-#include "/Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.h"
-#include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
+#ifndef SensorClient_test_h
+#define SensorClient_test_h
 
 #include "../../src/SensorClient/SensorClient.h"
 #include "../../src/MoistureSensor/MoistureSensor.h"
-
-#include "stddef.h"
-using namespace std;
 
 #define sensor_count 3
 
@@ -60,3 +57,5 @@ test(SensorService_readAll)
     assertEqual(value, target_value);
   }
 }
+
+#endif

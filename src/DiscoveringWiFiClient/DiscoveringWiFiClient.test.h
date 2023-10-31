@@ -1,14 +1,11 @@
-#ifndef DiscoveringWiFiCLient_test_h
-#define DiscoveringWiFiCLient_test_h
+#ifndef DiscoveringWiFiClient_test_h
+#define DiscoveringWiFiClient_test_h
 
-#include "../../src/WiFiNetwork/WiFiNetwork.h"
-#include "../../src/DynamicWiFiNetwork/DynamicWiFiNetwork.h"
-#include "../../src/DiscoveringWiFiClient/DiscoveringWiFiClient.h"
+// #include "../../src/WiFiNetwork/WiFiNetwork.h"
+// #include "../../src/DynamicWiFiNetwork/DynamicWiFiNetwork.h"
+// #include "../../src/DiscoveringWiFiClient/DiscoveringWiFiClient.h"
 
-#include "../../src/MockESP8266Class/MockESP8266Class.h"
-
-#include "stddef.h"
-using namespace std;
+// #include "../../src/MockESP8266Class/MockESP8266Class.h"
 
 test(DiscoveringWiFiClient_scan)
 {
@@ -63,7 +60,7 @@ test(DiscoveringWiFiClient_connection_found)
 
   discoveringNetworkClient.beginConnection();
 
-  bool foundConnection = discoveringNetworkClient.awaitConnection(onConnectionTick, 300);
+  bool foundConnection = discoveringNetworkClient.tryConnection(onConnectionTick, 300);
   assertTrue(foundConnection);
 }
 
@@ -86,7 +83,7 @@ test(DiscoveringWiFiClient_connection_notFound)
 
   discoveringNetworkClient.beginConnection();
 
-  bool foundConnection = discoveringNetworkClient.awaitConnection(onConnectionTick, 100);
+  bool foundConnection = discoveringNetworkClient.tryConnection(onConnectionTick, 100);
   assertFalse(foundConnection);
 }
 #endif

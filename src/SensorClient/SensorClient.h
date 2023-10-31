@@ -12,6 +12,7 @@ public:
     virtual void read() = 0;
     virtual float getCurrentReading() = 0;
     virtual int getId() = 0;
+    virtual String getFieldName() = 0;
     virtual ~Sensor() = default;
 };
 

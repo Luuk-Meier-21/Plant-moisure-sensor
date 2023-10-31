@@ -1,9 +1,12 @@
 #ifndef HTTPRequestClient_h
 #define HTTPRequestClient_h
 
-#include <WiFiClient.h>
-
+#ifdef CORE // Core entry point
+#include <ESP8266HTTPClient.h>
+#endif
+#ifdef TEST // Test entry point
 #include "../../src/MockHTTPClient/MockHTTPClient.h"
+#endif
 
 enum HTTPMethod
 {
@@ -32,9 +35,7 @@ public:
 
     if (currentResponseCode > 0)
     {
-      // Prev response has not been consumed yet.
-      Serial.println("Has prev response");
-      return false;
+      flush();
     }
 
     currentResponseCode = httpService->sendRequest(getMethodChar(method));
@@ -47,10 +48,16 @@ public:
     return currentResponseCode;
   };
 
+  void flush()
+  {
+    currentResponseCode = 0;
+    currentPayload = "";
+  }
+
   String consumePayload()
   {
     String payload = currentPayload;
-    currentPayload = "";
+    flush();
     return payload;
   }
 
@@ -60,16 +67,14 @@ public:
     {
     case HTTP_GET:
       return "GET";
-      break;
     case HTTP_DELETE:
       return "DELETE";
-      break;
     case HTTP_PUT:
       return "PUT";
-      break;
     case HTTP_PATCH:
       return "PATCH";
-      break;
+    default:
+      return "GET";
     }
   }
 };

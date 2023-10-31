@@ -20,20 +20,24 @@ public:
     {
         readFunc = readFunction;
     }
-    virtual void read()
+    void read()
     {
         int sensor_reading = readFunc(pin);
         moisture_percentage = (100 - ((sensor_reading / output_lowest) * 100));
     };
-    virtual float getCurrentReading()
+    float getCurrentReading()
     {
         return moisture_percentage;
     };
-    virtual int getId()
+    int getId()
     {
         return id;
     }
-    virtual ~MoistureSensor() = default;
+    String getFieldName()
+    {
+        return "field" + (String)id;
+    }
+    ~MoistureSensor() = default;
 };
 
 #endif

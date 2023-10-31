@@ -3,13 +3,19 @@
 
 #define TEST
 
+#include "stddef.h"
+using namespace std;
+
+#include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnit.h"
+
 #include "../src/SensorClient/SensorClient.test.h"
 #include "../src/MoistureSensor/MoistureSensor.test.h"
 #include "../src/StreamReader/StreamReader.test.h"
 #include "../src/WiFiNetwork/WiFiNetwork.test.h"
 #include "../src/DynamicWiFiNetwork/DynamicWiFiNetwork.test.h"
 #include "../src/DiscoveringWiFiClient/DiscoveringWiFiClient.test.h"
-#include "../src/MockHTTPClient/MockHTTPClient.h"
+#include "../src/HTTPRequestClient/HTTPRequestClient.test.h"
+// %TEST_INCLUDE%
 
 void setup()
 {

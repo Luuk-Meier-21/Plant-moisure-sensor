@@ -1,3 +1,6 @@
+#ifndef WiFiNetwork_test_h
+#define WiFiNetwork_test_h
+
 #include "../../src/WiFiNetwork/WiFiNetwork.h"
 
 #include "stddef.h"
@@ -32,3 +35,5 @@ test(WiFiNetwork_getPassword)
 
   assertEqual(network.getPassword(), pass);
 }
+
+#endif

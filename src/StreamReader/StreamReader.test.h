@@ -1,3 +1,6 @@
+#ifndef StreamReader_test_h
+#define StreamReader_test_h
+
 #include "../../src/StreamReader/StreamReader.h"
 
 #include "stddef.h"
@@ -106,3 +109,5 @@ test(SensorService_extractData)
 
   assertEqual(empty_data, "");
 }
+
+#endif

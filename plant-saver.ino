@@ -13,6 +13,8 @@
 #include "src/HTTPRequestClient/HTTPRequestClient.h"
 
 #define sensor_pin A0
+#define led_output_pin D0
+
 const int sensor_count = 1;
 
 // Steam
@@ -22,13 +24,17 @@ StreamReader serial_reader(&Serial);
 MoistureSensor *sensor_a = new MoistureSensor(1, sensor_pin, analogRead);
 
 Sensor *sensors[sensor_count] = {sensor_a};
-SensorClient<sensor_count> sensor_service(sensors);
+SensorClient<sensor_count> sensor_client(sensors);
 
 // Wifi:
 DynamicWiFiNetwork<network_count> dynamic_network(private_networks);
-DiscoveringWiFiClient<network_count> discoveringNetworkClient(WiFi, &dynamic_network);
+DiscoveringWiFiClient<network_count> discovering_network_client(WiFi, &dynamic_network);
 
-String serverName = "https://api.thingspeak.com/update";
+String server_name = "https://api.thingspeak.com/update";
+String api_url = server_name + "?api_key=" + API_WRITE_KEY;
+
+// timing TODO: abstract to Timer class
+unsigned long lastTime = 0;
 
 void setup()
 {
@@ -37,21 +43,71 @@ void setup()
   };
   Serial.begin(9600);
 
-  if (!discoveringNetworkClient.scan())
+  if (!discovering_network_client.scan())
   {
-    reportError("No network found.");
-  }
+    breakingError("No network found.");
+  };
 
-  discoveringNetworkClient.beginConnection();
-
-  if (!discoveringNetworkClient.awaitConnection(awaitConnection, 5000))
+  if (!discovering_network_client.tryConnection(awaitConnection, 20000))
   {
-    reportError("Unable to connect to network.");
-  }
-  // Sure of connection from here:
+    breakingError("Unable to connect to network.");
+  };
 
   Serial.println("");
+  Serial.println(WiFi.SSID());
   Serial.println(WiFi.localIP());
+}
+
+void loop()
+{
+  sensor_client.readAll();
+
+  if ((millis() - lastTime) > 5000)
+  {
+    updateEndpoint(sensor_client);
+    lastTime = millis();
+  }
+
+  delay(200);
+}
+
+template <size_t SIZE>
+void updateEndpoint(SensorClient<SIZE> &sensor_client)
+{
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.println(WiFi.status());
+    Serial.println("WiFi Disconnected!");
+    return;
+  };
+
+  String url = api_url;
+
+  for (size_t i = 0; i < sensor_client.count(); i++)
+  {
+    Sensor *sensor = sensor_client.getSensorOfIndex(i);
+    url = url + "&" + sensor->getFieldName() + "=" + sensor->getCurrentReading();
+  };
+
+  WiFiClientSecure client;
+  // Very insecure, but it should not matter for this case.
+  client.setInsecure();
+
+  HTTPClient http;
+  HTTPRequestClient requestClient(&client, &http);
+
+  int responseCode = requestClient.makeRequest(HTTP_GET, url);
+  if (responseCode <= 0)
+  {
+    // Bad request:
+    Serial.println("Bad request");
+    return;
+  }
+  else
+  {
+    Serial.print("Send data: ");
+    Serial.println(responseCode);
+  }
 }
 
 void awaitConnection()
@@ -60,38 +116,7 @@ void awaitConnection()
   delay(500);
 }
 
-unsigned long count = 0;
-
-void loop()
-{
-  count += 1;
-
-  sensor_service.readAll();
-  sensor_service.forEach(onSensor);
-
-  if (WiFi.status() == WL_CONNECTED)
-  {
-    WiFiClientSecure client;
-    // Very insecure, but it should not matter for this case.
-    client.setInsecure();
-    HTTPClient http;
-    HTTPRequestClient requestClient(&client, &http);
-
-    String url = serverName + "?api_key=" + API_WRITE_KEY + "&field1=" + (String)count;
-  };
-
-  delay(1000);
-}
-
-void onSensor(Sensor *sensor)
-{
-  Serial.print("Value: ");
-  Serial.print(sensor->getCurrentReading());
-  Serial.print(":");
-  Serial.println(sensor->getId());
-}
-
-void reportError(String message)
+void breakingError(String message)
 {
   Serial.println(message);
   // Report to user! (blinking led?)

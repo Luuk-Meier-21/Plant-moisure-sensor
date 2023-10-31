@@ -1,8 +1,5 @@
-#ifndef MoistureSensor_Test_h
-#define MoistureSensor_Test_h
-
-#include "/Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.h"
-#include "/Users/luukmeier/Documents/Arduino/libraries/AUnit/src/AUnitVerbose.h"
+#ifndef MoistureSensor_test_h
+#define MoistureSensor_test_h
 
 #include "../../src/SensorClient/SensorClient.h"
 #include "../../src/MoistureSensor/MoistureSensor.h"

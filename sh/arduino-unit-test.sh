@@ -10,7 +10,7 @@ if OUTPUT=$(make) ; then
   echo "[Done] Test compilation successfull"
 else
   echo "[Error] Test compilation failed"
-  echo "$OUTPUT"
+  # echo "$OUTPUT"
   exit 1
 fi
 

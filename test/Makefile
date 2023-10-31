@@ -8,4 +8,8 @@ ARDUINO_LIBS := AUnit
 # 	wget https://raw.githubusercontent.com/bxparks/EpoxyDuino/develop/EpoxyDuino.mk
 # 	touch $@ 
 # include ./EpoxyDuino.mk
+# EpoxyDuino.mk:
+# 	wget https://raw.githubusercontent.com/bxparks/EpoxyDuino/develop/EpoxyDuino.mk
+# 	touch $@ 
+# include ./EpoxyDuino.mk
 include /Users/luukmeier/Documents/Arduino/libraries/EpoxyDuino/EpoxyDuino.mk
