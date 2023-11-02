@@ -16,8 +16,6 @@ public:
   {
     for (size_t i = 0; i < SIZE; i++)
     {
-      Serial.print("Found: ");
-      Serial.println(networks[i].getSsid());
       if (ssid == networks[i].getSsid())
       {
         return networks[i];

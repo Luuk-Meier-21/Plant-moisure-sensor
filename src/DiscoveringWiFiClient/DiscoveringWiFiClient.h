@@ -75,7 +75,6 @@ public:
       for (int8_t i = 0; i < scan_results; i++)
       {
         wifi.getNetworkInfo(i, ssid, encryption_type, rssi, bssid, channel, hidden);
-        Serial.println(ssid);
         if (networks->has(ssid))
         {
           // Found a network we can connect to:
