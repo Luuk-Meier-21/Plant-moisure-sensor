@@ -15,6 +15,9 @@ using namespace std;
 #include "../src/DynamicWiFiNetwork/DynamicWiFiNetwork.test.h"
 #include "../src/DiscoveringWiFiClient/DiscoveringWiFiClient.test.h"
 #include "../src/HTTPRequestClient/HTTPRequestClient.test.h"
+#include "../src/Timer/Timer.test.h"
+#include "../src/Duration/Duration.test.h"
+
 // %TEST_INCLUDE%
 
 void setup()
