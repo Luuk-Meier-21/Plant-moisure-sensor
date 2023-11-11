@@ -17,6 +17,7 @@ using namespace std;
 #include "../src/HTTPRequestClient/HTTPRequestClient.test.h"
 #include "../src/Timer/Timer.test.h"
 #include "../src/Duration/Duration.test.h"
+#include "../src/TrackedFunction/TrackedFunction.test.h"
 
 // %TEST_INCLUDE%
 

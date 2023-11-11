@@ -16,13 +16,14 @@
 #include "src/DynamicWiFiNetwork/DynamicWiFiNetwork.h"
 #include "src/DiscoveringWiFiClient/DiscoveringWiFiClient.h"
 #include "src/HTTPRequestClient/HTTPRequestClient.h"
+#include "src/TrackedFunction/TrackedFunction.h"
 
 #define sensor_pin A0
 #define succes_pin D5
 #define error_pin D8
 
-// // Steam
-// StreamReader serial_reader(&Serial);
+#define connect_tries_setup 4
+#define connect_tries_runtime 4
 
 // Sensor:
 MoistureSensor *sensor_a = new MoistureSensor(1, sensor_pin, analogRead);
@@ -35,6 +36,10 @@ SensorClient<sensor_count> sensor_client(sensors);
 DynamicWiFiNetwork<network_count> dynamic_network(private_networks);
 DiscoveringWiFiClient<network_count> discovering_network_client(WiFi, &dynamic_network);
 
+typedef RecursiveTrackedFunction<void, DiscoveringWiFiClient<network_count> &> RecursiveConnectWiFiFunc;
+RecursiveConnectWiFiFunc connection_func(connectWiFi);
+
+// HTTP:
 String server_name = "https://api.thingspeak.com/update";
 String api_url = server_name + "?api_key=" + API_WRITE_KEY;
 
@@ -46,7 +51,7 @@ void setup()
   Serial.begin(9600);
   pinMode(succes_pin, OUTPUT);
   pinMode(error_pin, OUTPUT);
-  connectWiFi(discovering_network_client);
+  connection_func.call(discovering_network_client);
 
   Serial.print("\nConnected to: ");
   Serial.println(WiFi.SSID());
@@ -54,9 +59,19 @@ void setup()
 
 void loop()
 {
+  // Read all sensors in `sensor_client`.
   sensor_client.readAll();
 
-  static Timer endpoint_timer(Duration::fromSeconds(5));
+  // Reset connecion retry count every `y` minutes. Runtime gets `n` retries every `y` minutes.
+  static Timer retries_reset_timer(Duration::fromHours(2));
+  if (retries_reset_timer.hasElapsed())
+  {
+    connection_func.resetCount();
+    retries_reset_timer.reset();
+  };
+
+  // Update enpoint every `y` minutes.
+  static Timer endpoint_timer(Duration::fromMinutes(5));
   if (endpoint_timer.hasElapsed())
   {
     updateEndpoint(sensor_client);
@@ -67,17 +82,30 @@ void loop()
 }
 
 // Arduino functions
-
-void connectWiFi(DiscoveringWiFiClient<network_count> &discovering_network_client)
+void connectWiFi(RecursiveConnectWiFiFunc *self, DiscoveringWiFiClient<network_count> &discovering_network_client)
 {
-  if (!discovering_network_client.scan())
+  bool has_found_networks = discovering_network_client.scan();
+  if (has_found_networks == false)
   {
-    breakingError("No network found.", NETWORK_NOT_FOUND);
+    if (self->count() > connect_tries_setup)
+    {
+      breakingError("No matching network found.", NETWORK_NOT_FOUND);
+    }
+
+    self->call(discovering_network_client);
+    return;
   };
 
-  if (!discovering_network_client.tryConnection(awaitConnection, 20000))
+  bool has_connected = discovering_network_client.tryConnection(awaitConnection, 20000);
+  if (has_connected == false)
   {
-    breakingError("Unable to connect to network.", NETWORK_CONNECTION_FAILED);
+    if (self->count() > connect_tries_setup)
+    {
+      breakingError("Unable to connect to network.", NETWORK_CONNECTION_FAILED);
+    }
+
+    self->call(discovering_network_client);
+    return;
   };
 }
 
@@ -86,7 +114,12 @@ void updateEndpoint(SensorClient<SIZE> &sensor_client)
 {
   if (WiFi.status() != WL_CONNECTED)
   {
-    breakingError("WiFi Disconnected!", NETWORK_DISCONNECTED);
+    if (connection_func.count() > connect_tries_runtime)
+    {
+      breakingError("Unable to (re)connect to network.", NETWORK_DISCONNECTED);
+    }
+
+    connection_func.call(discovering_network_client);
     return;
   };
 
@@ -130,7 +163,6 @@ void awaitConnection()
 
 void breakingError(String message, ExceptionBlinkType blink_type)
 {
-  // Report to user! (blinking led?)
   while (true)
   {
     for (int i = 0; i < blink_type; i++)

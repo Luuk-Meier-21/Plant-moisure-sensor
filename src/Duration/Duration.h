@@ -4,14 +4,19 @@
 class Duration
 {
 public:
-  static unsigned long fromSeconds(unsigned long sec)
+  static unsigned long fromSeconds(unsigned long secs)
   {
-    return 1000 * sec;
+    return 1000 * secs;
   }
 
-  static unsigned long fromMinutes(unsigned long min)
+  static unsigned long fromMinutes(unsigned long mins)
   {
-    return 60000 * min;
+    return Duration::fromSeconds(60 * mins);
+  }
+
+  static unsigned long fromHours(unsigned long hours)
+  {
+    return Duration::fromMinutes(60 * hours);
   }
 };
 

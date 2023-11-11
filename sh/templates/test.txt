@@ -3,7 +3,7 @@
 
 #include "./%NAME%.h"
 
-test(%NAME%_scan) 
+test(%NAME%_method) 
 {
   assertFalse(true);
 };
