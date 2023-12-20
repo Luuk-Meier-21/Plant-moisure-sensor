@@ -9,25 +9,11 @@
 class SensorServiceTest
 {
 public:
-  static int mockReadHighest(uint8_t pin)
-  {
-    (void)pin;
-
-    return MoistureSensor::output_highest;
-  }
-
-  static int mockReadLowest(uint8_t pin)
-  {
-    (void)pin;
-
-    return MoistureSensor::output_lowest;
-  }
-
   static int mockReadRandom(uint8_t pin)
   {
     (void)pin;
 
-    return std::rand() * MoistureSensor::output_highest;
+    return std::rand() > .5 ? HIGH : LOW;
   }
 };
 

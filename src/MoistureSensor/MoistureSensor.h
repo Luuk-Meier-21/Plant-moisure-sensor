@@ -7,36 +7,49 @@ class MoistureSensor : public Sensor
 {
     uint8_t pin;
     int id;
-    ReaderFunction readFunc = NULL;
+    ReaderFunction read_func;
+    SetupFunction setup_func;
 
-    float moisture_percentage = 0;
+    int is_high = 0;
+
+    static void defaultSetup(uint8_t pin)
+    {
+        (void)pin;
+    }
 
 public:
-    static constexpr float output_lowest = 1023.00;
-    static constexpr float output_highest = 0;
+    MoistureSensor(int sensor_id, uint8_t input, ReaderFunction read)
+        : pin(input),
+          id(sensor_id),
+          read_func(read),
+          setup_func(defaultSetup){};
 
-    MoistureSensor(int sensor_id, uint8_t analog_pin, ReaderFunction readFunction)
-        : pin(analog_pin), id(sensor_id)
-    {
-        readFunc = readFunction;
-    }
+    MoistureSensor(int sensor_id, uint8_t input, ReaderFunction read, SetupFunction setup)
+        : pin(input),
+          id(sensor_id),
+          read_func(read),
+          setup_func(setup){};
+
     void read()
     {
-        int sensor_reading = readFunc(pin);
-        moisture_percentage = (100 - ((sensor_reading / output_lowest) * 100));
-    };
+        is_high = read_func(pin);
+    }
+
+    void setup()
+    {
+        setup_func(pin);
+    }
+
     float getCurrentReading()
     {
-        return moisture_percentage;
-    };
+        return is_high;
+    }
+
     int getId()
     {
         return id;
     }
-    String getFieldName()
-    {
-        return "field" + (String)id;
-    }
+
     ~MoistureSensor() = default;
 };
 

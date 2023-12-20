@@ -4,7 +4,8 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 
-// Helper classes:
+#include "src/Macros/Macros.h"
+
 #include "src/Exception/Exception.h"
 #include "src/Timer/Timer.h"
 #include "src/Duration/Duration.h"
@@ -18,18 +19,30 @@
 #include "src/HTTPRequestClient/HTTPRequestClient.h"
 #include "src/TrackedFunction/TrackedFunction.h"
 
-#define sensor_pin A0
+#define analog_input_pin A0
+#define digital_input_pin_a D2
+#define digital_input_pin_b D1
+
+#define connection_timeout_milisec 20000
+
 #define succes_pin D5
 #define error_pin D8
 
 #define connect_tries_setup 4
 #define connect_tries_runtime 4
 
-// Sensor:
-MoistureSensor *sensor_a = new MoistureSensor(1, sensor_pin, analogRead);
-Sensor *sensors[] = {sensor_a};
+// void setupSensor(uint8_t pin)
+// {
+//     // pinMode(pin, INPUT);
+// }
 
-const size_t sensor_count = *(&sensors + 1) - sensors;
+// Sensor:
+// BUG: passing `setupSensor` to `MoistureSensor` causes c++ to lose the typedef of `connectWiFi`, god knows why.
+MoistureSensor *moisture_sensor_a = new MoistureSensor(1, digital_input_pin_a, digitalRead);
+MoistureSensor *moisture_sensor_b = new MoistureSensor(2, digital_input_pin_b, digitalRead);
+Sensor *sensors[] = {moisture_sensor_a, moisture_sensor_b};
+
+const size_t sensor_count = LENGTH(sensors);
 SensorClient<sensor_count> sensor_client(sensors);
 
 // WiFi:
@@ -45,134 +58,132 @@ String api_url = server_name + "?api_key=" + API_WRITE_KEY;
 
 void setup()
 {
-  while (!Serial)
-  {
-  };
-  Serial.begin(9600);
-  pinMode(succes_pin, OUTPUT);
-  pinMode(error_pin, OUTPUT);
-  connection_func.call(discovering_network_client);
+    Serial.begin(9600);
+    Serial.println("\nWaking from sleep, running setup.");
 
-  Serial.print("\nConnected to: ");
-  Serial.println(WiFi.SSID());
+    pinMode(digital_input_pin_a, INPUT_PULLUP);
+    pinMode(digital_input_pin_b, INPUT_PULLUP);
+    pinMode(succes_pin, OUTPUT);
+    pinMode(error_pin, OUTPUT);
+
+    // sensor_client.setupAll();
+
+    connection_func.call(discovering_network_client);
+
+    Serial.print("\nConnected to: ");
+    Serial.println(WiFi.SSID());
 }
 
 void loop()
 {
-  // Read all sensors in `sensor_client`.
-  sensor_client.readAll();
+    sensor_client.readAll();
 
-  // Reset connecion retry count every `y` minutes. Runtime gets `n` retries every `y` minutes.
-  static Timer retries_reset_timer(Duration::fromHours(2));
-  if (retries_reset_timer.hasElapsed())
-  {
-    connection_func.resetCount();
-    retries_reset_timer.reset();
-  };
-
-  // Update enpoint every `y` minutes.
-  static Timer endpoint_timer(Duration::fromMinutes(5));
-  if (endpoint_timer.hasElapsed())
-  {
     updateEndpoint(sensor_client);
-    endpoint_timer.reset();
-  };
 
-  delay(200);
-}
+    int minutes = 5;
+    unsigned long sleep_time = Duration::fromSeconds(minutes).toMicroseconds();
 
-// Arduino functions
+    Serial.print("Starting deep sleep for ");
+    Serial.print(minutes);
+    Serial.print(" minutes. \n\n");
+
+    ESP.deepSleep(sleep_time);
+};
+
+void awaitConnection()
+{
+    Serial.print(".");
+    delay(400);
+};
+
 void connectWiFi(RecursiveConnectWiFiFunc *self, DiscoveringWiFiClient<network_count> &discovering_network_client)
 {
-  bool has_found_networks = discovering_network_client.scan();
-  if (has_found_networks == false)
-  {
-    if (self->count() > connect_tries_setup)
+    bool has_found_networks = discovering_network_client.scan();
+    if (has_found_networks == false)
     {
-      breakingError("No matching network found.", NETWORK_NOT_FOUND);
-    }
+        if (self->count() > connect_tries_setup)
+        {
+            throwBreaking("No matching network found.", NETWORK_NOT_FOUND);
+        }
 
-    self->call(discovering_network_client);
-    return;
-  };
+        self->call(discovering_network_client);
+        return;
+    };
 
-  bool has_connected = discovering_network_client.tryConnection(awaitConnection, 20000);
-  if (has_connected == false)
-  {
-    if (self->count() > connect_tries_setup)
+    bool has_connected = discovering_network_client.tryConnection(awaitConnection, connection_timeout_milisec);
+    if (has_connected == false)
     {
-      breakingError("Unable to connect to network.", NETWORK_CONNECTION_FAILED);
-    }
+        if (self->count() > connect_tries_setup)
+        {
+            throwBreaking("Unable to connect to network.", NETWORK_CONNECTION_FAILED);
+        }
 
-    self->call(discovering_network_client);
-    return;
-  };
+        self->call(discovering_network_client);
+        return;
+    };
 }
 
 template <size_t SIZE>
 void updateEndpoint(SensorClient<SIZE> &sensor_client)
 {
-  if (WiFi.status() != WL_CONNECTED)
-  {
-    if (connection_func.count() > connect_tries_runtime)
+    if (WiFi.status() != WL_CONNECTED)
     {
-      breakingError("Unable to (re)connect to network.", NETWORK_DISCONNECTED);
-    }
+        if (connection_func.count() > connect_tries_runtime)
+        {
+            throwBreaking("Unable to (re)connect to network.", NETWORK_DISCONNECTED);
+        }
 
-    connection_func.call(discovering_network_client);
-    return;
-  };
+        connection_func.call(discovering_network_client);
+        return;
+    };
 
-  String url = api_url;
-  for (size_t i = 0; i < sensor_client.count(); i++)
-  {
-    Sensor *sensor = sensor_client.getSensorOfIndex(i);
-    url = url + "&" + sensor->getFieldName() + "=" + sensor->getCurrentReading();
-  };
-
-  WiFiClientSecure client;
-  // Very insecure, but it should not matter for this case.
-  client.setInsecure();
-
-  HTTPClient http;
-  HTTPRequestClient request_client(&client, &http);
-
-  static bool is_active = false;
-  int response_code = request_client.makeRequest(HTTP_GET, url);
-  if (response_code <= 0)
-  {
-    // Bad request:
-    Serial.println("Bad request");
-  }
-  else
-  {
-    Serial.print("Send data: ");
-    Serial.println(response_code);
-
-    // Debug blinking:
-    digitalWrite(succes_pin, is_active ? HIGH : LOW);
-    is_active = !is_active;
-  }
-}
-
-void awaitConnection()
-{
-  Serial.print(".");
-  delay(500);
-}
-
-void breakingError(String message, ExceptionBlinkType blink_type)
-{
-  while (true)
-  {
-    for (int i = 0; i < blink_type; i++)
+    String url = api_url;
+    for (size_t i = 0; i < sensor_client.count(); i++)
     {
-      digitalWrite(error_pin, HIGH);
-      delay(200);
-      digitalWrite(error_pin, LOW);
-      delay(200);
+        Sensor *sensor = sensor_client.getSensorOfIndex(i);
+        url = url + "&field" + sensor->getId() + "=" + sensor->getCurrentReading();
+    };
+
+    Serial.println(url);
+
+    WiFiClientSecure client;
+    // Very insecure, but it should not matter for this case.
+    client.setInsecure();
+
+    HTTPClient http;
+    HTTPRequestClient request_client(&client, &http);
+
+    static bool is_active = false;
+    int response_code = request_client.makeRequest(HTTP_GET, url);
+    if (response_code <= 0)
+    {
+        // Bad request:
+        Serial.println("Bad request");
     }
-    Serial.println(message);
-    delay(1000);
-  };
+    else
+    {
+        Serial.print("Send data: ");
+        Serial.println(response_code);
+        Serial.println(url);
+
+        // Debug blinking:
+        digitalWrite(succes_pin, is_active ? HIGH : LOW);
+        is_active = !is_active;
+    }
 }
+
+void throwBreaking(String message, ExceptionBlinkType blink_type)
+{
+    while (true)
+    {
+        for (int i = 0; i < blink_type; i++)
+        {
+            digitalWrite(error_pin, HIGH);
+            delay(200);
+            digitalWrite(error_pin, LOW);
+            delay(200);
+        }
+        Serial.println(message);
+        delay(1000);
+    };
+};

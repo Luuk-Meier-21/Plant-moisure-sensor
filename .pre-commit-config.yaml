@@ -9,6 +9,6 @@ repos:
     hooks:
       - id: unit-test
         name: unit-test
-        entry: bash ./sh/unit-test.sh
+        entry: bash sh/test.sh
         language: system
         pass_filenames: false

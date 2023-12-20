@@ -8,12 +8,20 @@ class Sensor
 {
 public:
     typedef int (*ReaderFunction)(uint8_t);
+    typedef void (*WriterFunction)(uint8_t, uint8_t);
+    typedef void (*SetupFunction)(uint8_t);
 
     virtual void read() = 0;
     virtual float getCurrentReading() = 0;
     virtual int getId() = 0;
-    virtual String getFieldName() = 0;
+    virtual void setup() = 0;
     virtual ~Sensor() = default;
+
+    // static constexpr float analog_high = 1023.00;
+    // static constexpr float analog_low = 0;
+
+    // static constexpr float digital_high = HIGH;
+    // static constexpr float digital_low = LOW;
 };
 
 /**
@@ -32,11 +40,20 @@ public:
             sensors[i] = _sensors[i];
         }
     }
+
     void readAll()
     {
         for (size_t i = 0; i < SIZE; i++)
         {
             sensors[i]->read();
+        }
+    }
+
+    void setupAll()
+    {
+        for (size_t i = 0; i < SIZE; i++)
+        {
+            sensors[i]->setup();
         }
     }
 

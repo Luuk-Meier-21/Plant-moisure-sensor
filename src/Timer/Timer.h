@@ -18,6 +18,11 @@ public:
   {
     last_time = millis();
   }
+
+  unsigned long currentDelay()
+  {
+    return delay;
+  }
 };
 
 #endif
