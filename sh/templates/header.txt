@@ -1,0 +1,9 @@
+#ifndef %NAME%_h
+#define %NAME%_h
+
+class %NAME% 
+{
+  
+};
+
+#endif

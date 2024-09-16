@@ -1,0 +1,11 @@
+#ifndef %NAME%_test_h
+#define %NAME%_test_h
+
+#include "./%NAME%.h"
+
+test(%NAME%_method) 
+{
+  assertFalse(true);
+};
+
+#endif
